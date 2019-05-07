@@ -1,6 +1,7 @@
 package git.simple;
 
 import git.simple.model.Student;
+import git.simple.model.StudentSolrResult;
 import git.simple.proxy.SolrProxy;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
@@ -9,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * @Description TODO
@@ -68,6 +70,47 @@ public class SolrTest {
         SolrProxy solr = new SolrProxy();
         try {
             solr.deleteDocumentById(100);
+        } catch (SolrServerException | IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    @Test
+    public void test5() {
+        SolrProxy solr = new SolrProxy();
+        try {
+            // q -> *:* 表示全部
+            List<StudentSolrResult> students = solr.queryByString("name:Ryan", 0, 30);
+
+            for (StudentSolrResult student : students) {
+                logger.info(String.format("[%s, %s]", student.getSno(), student.getName()));
+            }
+        } catch (SolrServerException | IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    @Test
+    public void test6() {
+        SolrProxy solr = new SolrProxy();
+        try {
+            // q -> *:* 表示全部
+            List<StudentSolrResult> students = solr.queryByFilter("name:Ryan", 0, 30);
+
+            for (StudentSolrResult student : students) {
+                logger.info(String.format("[%s, %s]", student.getSno(), student.getName()));
+            }
+        } catch (SolrServerException | IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    @Test
+    public void test7() {
+        SolrProxy solr = new SolrProxy();
+        try {
+            // q -> *:* 表示全部
+            solr.queryHighlighting("age:18", 0, 30);
         } catch (SolrServerException | IOException ex) {
             ex.printStackTrace();
         }
